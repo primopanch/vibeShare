@@ -1,0 +1,83 @@
+digraph MER {
+  graph [rankdir=LR, fontname="Helvetica", label="VibeShare - Modelo Entidad-Relación", labelloc=t, fontsize=20, nodesep=0.6, ranksep=1.3, pad=0.4];
+  node [shape=plain, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10, color="#43699c", arrowhead=crow, arrowtail=teetee, dir=both];
+
+  usuarios [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>usuarios</b></font></td></tr>
+    <tr><td align="left">PK id_usuario INT</td></tr>
+    <tr><td align="left">nombre_completo VARCHAR(100)</td></tr>
+    <tr><td align="left">correo VARCHAR(150) UNIQUE</td></tr>
+    <tr><td align="left">contrasena VARCHAR(255)</td></tr>
+    <tr><td align="left">biografia VARCHAR(300)</td></tr>
+    <tr><td align="left">foto_perfil VARCHAR(255)</td></tr>
+    <tr><td align="left">rol ENUM(usuario, admin)</td></tr>
+    <tr><td align="left">fecha_registro DATETIME</td></tr></table>>];
+  publicaciones [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>publicaciones</b></font></td></tr>
+    <tr><td align="left">PK id_publicacion INT</td></tr>
+    <tr><td align="left">FK id_usuario INT</td></tr>
+    <tr><td align="left">texto TEXT</td></tr>
+    <tr><td align="left">imagen VARCHAR(255)</td></tr>
+    <tr><td align="left">visibilidad ENUM(publico, amigos)</td></tr>
+    <tr><td align="left">fecha_publicacion DATETIME</td></tr></table>>];
+  comentarios [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>comentarios</b></font></td></tr>
+    <tr><td align="left">PK id_comentario INT</td></tr>
+    <tr><td align="left">FK id_publicacion INT</td></tr>
+    <tr><td align="left">FK id_usuario INT</td></tr>
+    <tr><td align="left">contenido VARCHAR(500)</td></tr>
+    <tr><td align="left">fecha_hora DATETIME</td></tr></table>>];
+  me_gusta [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>me_gusta</b></font></td></tr>
+    <tr><td align="left">PK·FK id_usuario INT</td></tr>
+    <tr><td align="left">PK·FK id_publicacion INT</td></tr>
+    <tr><td align="left">fecha DATETIME</td></tr></table>>];
+  amistades [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>amistades</b></font></td></tr>
+    <tr><td align="left">PK id_amistad INT</td></tr>
+    <tr><td align="left">FK id_solicitante INT</td></tr>
+    <tr><td align="left">FK id_receptor INT</td></tr>
+    <tr><td align="left">estado ENUM(pendiente, aceptada, rechazada)</td></tr>
+    <tr><td align="left">fecha_solicitud DATETIME</td></tr>
+    <tr><td align="left">fecha_respuesta DATETIME</td></tr></table>>];
+  mensajes [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>mensajes</b></font></td></tr>
+    <tr><td align="left">PK id_mensaje INT</td></tr>
+    <tr><td align="left">FK id_emisor INT</td></tr>
+    <tr><td align="left">FK id_receptor INT</td></tr>
+    <tr><td align="left">contenido VARCHAR(1000)</td></tr>
+    <tr><td align="left">leido TINYINT(1)</td></tr>
+    <tr><td align="left">fecha_envio DATETIME</td></tr></table>>];
+  notificaciones [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>notificaciones</b></font></td></tr>
+    <tr><td align="left">PK id_notificacion INT</td></tr>
+    <tr><td align="left">FK id_usuario INT (destinatario)</td></tr>
+    <tr><td align="left">FK id_origen INT</td></tr>
+    <tr><td align="left">tipo ENUM(me_gusta, comentario, ...)</td></tr>
+    <tr><td align="left">id_referencia INT</td></tr>
+    <tr><td align="left">leida TINYINT(1)</td></tr>
+    <tr><td align="left">fecha DATETIME</td></tr></table>>];
+  reportes [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+    <tr><td bgcolor="#43699c"><font color="white"><b>reportes</b></font></td></tr>
+    <tr><td align="left">PK id_reporte INT</td></tr>
+    <tr><td align="left">FK id_reportante INT</td></tr>
+    <tr><td align="left">FK id_publicacion INT</td></tr>
+    <tr><td align="left">FK id_comentario INT</td></tr>
+    <tr><td align="left">motivo VARCHAR(300)</td></tr>
+    <tr><td align="left">estado ENUM(pendiente, revisado, descartado)</td></tr>
+    <tr><td align="left">FK id_admin INT</td></tr>
+    <tr><td align="left">fecha DATETIME</td></tr></table>>];
+
+  usuarios -> publicaciones  [label="publica 1:N"];
+  usuarios -> comentarios    [label="escribe 1:N"];
+  publicaciones -> comentarios [label="tiene 1:N"];
+  usuarios -> me_gusta       [label="da 1:N"];
+  publicaciones -> me_gusta  [label="recibe 1:N"];
+  usuarios -> amistades      [label="envía / recibe 1:N"];
+  usuarios -> mensajes       [label="envía / recibe 1:N"];
+  usuarios -> notificaciones [label="recibe 1:N"];
+  usuarios -> reportes       [label="reporta / revisa 1:N"];
+  publicaciones -> reportes  [label="0..N"];
+  comentarios -> reportes    [label="0..N"];
+}
