@@ -18,10 +18,3 @@ Red social: proyecto de la Fase 2 (arquitectura de datos y esqueleto funcional).
 | joseph@vibeshare.com | usuario |
 | josuke@vibeshare.com | usuario |
 
-## Instalación
-1. Crea una base de datos MySQL e importa `database.sql` (phpMyAdmin → Importar).
-2. Edita `config.php` con el host, nombre de base de datos, usuario y contraseña.
-3. Sube todos los archivos a la carpeta pública del hosting (`htdocs` / `public_html`).
-4. Abre la URL y entra con un usuario de prueba.
-
-Local: `php -S localhost:8000` (con MySQL corriendo y `config.php` configurado).
